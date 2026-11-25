@@ -1,0 +1,3 @@
+- insert:
+    - id: harness-workspace-win
+      name: '@local/dsh-harness-workspace-win'

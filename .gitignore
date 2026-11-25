@@ -1,0 +1,12 @@
+node_modules/
+coverage/
+*.log
+*.tgz
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+.dsh/
+.harness-workspace-test-*/
+/dsh-harness-workspace-github.zip

@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="九组精选对照及 68 项完整技法目录，附实际演示源码。">
+<title>动效与材质图鉴</title>
+<link rel="stylesheet" href="图鉴目录.css">
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f6f4ed;
+    --ink: #202722;
+    --forest: #315941;
+    --quiet: #505d53;
+    --line: #c8cfc3;
+    --mist: #e7ede3;
+    --panel: #fcfaf4;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: var(--paper); color: var(--ink); }
+  body { margin: 0; font-size: .9375rem; line-height: 1.65; }
+  a { color: var(--forest); text-underline-offset: .24em; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid #805421; outline-offset: 3px; }
+  .frame { width: min(100% - 3rem, 75rem); margin-inline: auto; }
+  .topline, .indexline, .page-foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .7rem 1.3rem; }
+  .topline { padding-block: 1rem .85rem; border-bottom: 1px solid var(--forest); }
+  .eyebrow, .meta, .chip, .axis, .stage-title { font: 700 .72rem/1.5 var(--mono); letter-spacing: .09em; }
+  .eyebrow, .meta, .stage-title, .axis { color: var(--forest); }
+  .topline a { font-size: .85rem; font-weight: 700; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, .48fr); min-height: 15rem; border-bottom: 1px solid var(--forest); }
+  .hero-copy { align-self: center; padding: clamp(1.45rem, 4vw, 3.7rem) 1rem clamp(1.5rem, 4vw, 3.4rem) 0; }
+  .hero h1 { margin: .36rem 0 .7rem; font-size: clamp(2.05rem, 5.3vw, 4.8rem); line-height: 1.08; letter-spacing: -.055em; }
+  .hero p { max-width: 32rem; margin: 0; color: var(--quiet); }
+  .hero-art { position: relative; isolation: isolate; min-height: 13.5rem; overflow: hidden; color: #e5ece0; background: #234332; display: grid; place-items: center; border-left: 1px solid var(--forest); }
+  .hero-art svg { width: 100%; height: 100%; position: absolute; inset: 0; display: block; }
+  .hero-art .axis { position: absolute; bottom: .75rem; display: flex; justify-content: space-between; gap: 1rem; width: calc(100% - 1.5rem); color: #e5ece0; }
+  .indexline { padding-block: .75rem; border-bottom: 1px solid var(--line); }
+  .indexline nav { display: flex; gap: .3rem 1rem; flex-wrap: wrap; }
+  .indexline a { font-size: .8rem; }
+  .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-left: 1px solid var(--line); }
+  .spec { min-width: 0; padding: clamp(.85rem, 2.15vw, 1.7rem); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); scroll-margin-top: 1rem; }
+  .spec-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
+  .spec h2 { margin: .12rem 0 0; font-size: clamp(1.28rem, 2.25vw, 1.85rem); line-height: 1.25; letter-spacing: -.035em; }
+  .chip { color: var(--forest); background: var(--mist); border: 1px solid var(--line); padding: .24rem .48rem; flex: none; }
+  .spec > p { color: var(--quiet); margin: .6rem 0 .85rem; }
+  .sample { min-width: 0; border: 1px solid var(--line); background: var(--panel); }
+  .toolrow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .55rem .8rem; padding: .62rem .75rem; border-bottom: 1px solid var(--line); }
+  .action { border: 1px solid var(--forest); background: var(--forest); color: #fff; padding: .38rem .7rem; font-size: .83rem; font-weight: 700; }
+  .action:hover { background: #244631; }
+  .action-light { background: #fffdf7; color: var(--forest); }
+  .action-light:hover { background: #ebf0e7; }
+  .cells { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cell { min-width: 0; margin: 0; }
+  .cell + .cell { border-left: 1px solid var(--line); }
+  .cell figcaption { padding: .42rem .28rem; text-align: center; border-top: 1px solid var(--line); font-size: .79rem; font-weight: 700; }
+  .centered { display: grid; place-items: center; min-height: 8.15rem; overflow: hidden; }
+  .ruled { background-color: #edf1e9; background-image: linear-gradient(#31594113 1px, transparent 1px), linear-gradient(90deg, #31594113 1px, transparent 1px); background-size: 15px 15px; }
+  .artifact-mark, .drawer-mark { display: grid; place-items: center; font: 700 .84rem/1 var(--mono); }
+  .artifact-mark { width: 2.6rem; height: 2.6rem; border: 1px solid #496953; background: #e7eddf; color: #244c35; }
+  .hint { margin: 0; padding: .5rem .75rem; color: var(--quiet); font-size: .78rem; border-top: 1px solid var(--line); }
+  .source { min-width: 0; margin-top: .85rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .source summary { cursor: pointer; padding: .48rem .1rem; font-size: .81rem; color: var(--forest); font-weight: 700; }
+  .source summary:hover { background: var(--mist); }
+  .source summary span { margin-left: .35rem; font: .72rem var(--mono); color: var(--quiet); }
+  .source-body { border-top: 1px solid var(--line); }
+  .source-body p { color: var(--quiet); font-size: .76rem; margin: .55rem 0; }
+  .source-body h3 { font: 700 .76rem var(--mono); margin: .8rem 0 .3rem; color: var(--forest); }
+  .source-body pre { margin: 0 0 .65rem; background: #e8ece3; color: #203e2c; padding: .75rem; font-size: .76rem; line-height: 1.55; overflow-x: auto; tab-size: 2; }
+  .source-body code { font-family: var(--mono); }
+  .page-foot { margin-block: 1rem 1.8rem; color: var(--quiet); font-size: .81rem; }
+  @media (max-width: 47rem) { .frame { width: min(100% - 1.5rem, 75rem); } .gallery { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 35rem) { .hero { grid-template-columns: minmax(0, 1fr); } .hero-art { border-left: 0; min-height: 9.25rem; } }
+</style>
+<style id="css-enter-motion">
+  #enter-motion.is-playing .fade-in { animation: sample-fade 640ms ease-out both; }
+  #enter-motion.is-playing .slide-in { animation: sample-slide 640ms ease-out both; }
+  @keyframes sample-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes sample-slide { from { transform: translateX(3.5rem); } to { transform: translateX(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    #enter-motion.is-playing .fade-in, #enter-motion.is-playing .slide-in { animation: none; }
+  }
+</style>
+<style id="css-spring-motion">
+  #spring-trigger { border: 1px solid #315941; background: #fcfaf4; padding: .48rem .75rem; display: flex; align-items: center; gap: .44rem; font-weight: 700; }
+  #spring-trigger .spring-icon { display: inline-block; color: #315941; font-size: 1.28rem; line-height: 1; }
+  #spring-trigger[aria-pressed="true"] { background: #315941; color: #fff; }
+  #spring-trigger[aria-pressed="true"] .spring-icon { color: inherit; }
+  #spring-trigger.is-bouncing .spring-icon { animation: sample-spring 480ms ease-out both; }
+  @keyframes sample-spring {
+    0%   { transform: scale(.78); }
+    42%  { transform: scale(1.30); }
+    66%  { transform: scale(.93); }
+    83%  { transform: scale(1.07); }
+    100% { transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #spring-trigger.is-bouncing .spring-icon { animation: none; }
+  }
+</style>
+<style id="css-detail-drawer">
+  .drawer-stage { min-height: 8.15rem; padding: .9rem; display: grid; place-items: center; }
+  .drawer-row { width: min(100%, 22rem); display: flex; align-items: center; gap: .65rem; border: 1px solid #c8cfc3; background: #fcfaf4; padding: .65rem; }
+  .drawer-mark { flex: none; width: 2.15rem; height: 2.15rem; background: #e2eadf; color: #315941; }
+  .drawer-row strong { font-size: .86rem; flex: 1; }
+  #detail-panel {
+    position: fixed; inset: 0 0 0 auto; margin: 0;
+    width: min(100%, 24rem); height: 100%; max-width: none; max-height: none;
+    overflow: auto; padding: 1.4rem; color: #202722; background: #fcfaf4; border: 0; border-left: 1px solid #315941;
+  }
+  #detail-panel[open] { animation: sample-drawer 280ms cubic-bezier(.2,.75,.3,1) both; }
+  #detail-panel::backdrop { background: rgb(21 41 30 / .48); }
+  .drawer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #c8cfc3; padding-bottom: .75rem; }
+  .drawer-head h3 { margin: .26rem 0 0; font-size: 1.55rem; line-height: 1.2; }
+  @keyframes sample-drawer { from { transform: translateX(100%); } to { transform: translateX(0); } }
+  @media (prefers-reduced-motion: reduce) { #detail-panel[open] { animation: none; } }
+</style>
+<style id="css-scroll-reveal">
+  #reveal-viewport { height: 8.15rem; overflow-y: auto; overscroll-behavior: contain; padding: .55rem .78rem; }
+  #reveal-viewport:focus-visible { outline-offset: -3px; }
+  .reveal-intro { min-height: 8.2rem; display: grid; place-items: center; border: 1px dashed #789382; color: #315941; text-align: center; }
+  .reveal-slot { margin-top: .52rem; min-height: 3.45rem; border: 1px dashed #a4b3a5; }
+  .reveal-item { margin: 0; padding: .86rem; border-left: .2rem solid #315941; background: #dce8db; font-weight: 700; }
+  @media (prefers-reduced-motion: no-preference) {
+    #reveal-viewport[data-observing] .reveal-item.is-visible { animation: sample-reveal 420ms ease-out both; }
+    #reveal-viewport[data-observing] .reveal-item:not(.is-visible) { opacity: 0; }
+  }
+  @keyframes sample-reveal {
+    from { opacity: 0; transform: translateY(.75rem); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+<style id="css-glassmorphism">
+  .glass-ground {
+    background: repeating-linear-gradient(120deg, transparent 0 6px, #1f412f50 7px 8px, transparent 9px 14px),
+      linear-gradient(125deg, #88aa92 0 43%, #d2aa6b 44% 64%, #729580 65% 100%);
+  }
+  .glass-card {
+    display: grid; place-items: center; width: min(77%, 7rem); height: 4.5rem;
+    border: 1px solid #fbf9ef; border-radius: .55rem;
+    color: #18291f; font-weight: 800; background: #faf8ef;
+  }
+  .glass-card.translucent { background: rgb(250 248 239 / .58); }
+  .glass-card.frosted { background: #faf8ef; }
+  @supports ((backdrop-filter: blur(9px)) or (-webkit-backdrop-filter: blur(9px))) {
+    .glass-card.frosted { background: rgb(250 248 239 / .58); -webkit-backdrop-filter: blur(9px); backdrop-filter: blur(9px); }
+  }
+</style>
+<style id="css-neumorphism">
+  .soft-ground, .soft-control { background: #e4e9e0; }
+  .soft-control {
+    width: min(78%, 6.15rem); min-height: 2.85rem; border-radius: .63rem; border: 1px solid #647769;
+    color: #203628; font-weight: 800; font-size: .83rem;
+  }
+  .soft-control.raised { box-shadow: 5px 5px 10px #a6b1a2, -5px -5px 10px #fbfff7; }
+  .soft-control.sunken { box-shadow: inset 4px 4px 8px #a6b1a2, inset -4px -4px 8px #fbfff7; }
+  .soft-control:focus-visible { outline: 2px solid #805421; outline-offset: 3px; }
+</style>
+<style id="css-skeleton-screen">
+  #skeleton-screen .loading-cells { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .loading-preview { min-block-size: 8.15rem; padding: .55rem; text-align: center; }
+  .loading-preview > p { margin: 0; color: #505d53; font-size: .82rem; }
+  .loading-card {
+    display: grid; grid-template-columns: 1.9rem minmax(0, 1fr); align-items: center; gap: .36rem .48rem;
+    width: min(100%, 13rem); min-block-size: 5.4rem; padding: .52rem;
+    border: 1px solid #a5b4a5; background: #fcfaf4; text-align: start; font-size: .82rem;
+  }
+  .loading-avatar { display: grid; place-items: center; inline-size: 1.9rem; block-size: 1.9rem; background: #dce8db; color: #315941; }
+  .loading-card p, .loading-line { grid-column: 1 / -1; margin: 0; }
+  .loading-card p { line-height: 1.4; color: #505d53; }
+  .loading-block { background-color: #ced8cb; }
+  .loading-line { block-size: .5rem; }
+  .loading-title-block { block-size: .65rem; inline-size: 75%; }
+  .loading-line:last-child { inline-size: 65%; }
+  #cancel-skeleton[aria-disabled="true"] { opacity: .72; cursor: default; }
+  @media (prefers-reduced-motion: no-preference) {
+    .loading-block {
+      background-image: linear-gradient(110deg, transparent 24%, #ebf0e8 49%, transparent 74%);
+      background-size: 240% 100%; animation: sample-shimmer 1.25s linear infinite;
+    }
+  }
+  @keyframes sample-shimmer { from { background-position: 120% 0; } to { background-position: -100% 0; } }
+</style>
+<style id="css-scroll-snap">
+  #snap-viewport { block-size: 8.15rem; overflow-y: auto; scroll-behavior: auto; }
+  #snap-viewport[data-snap] { scroll-snap-type: y mandatory; }
+  #snap-viewport:focus-visible { outline-offset: -3px; }
+  .snap-panel {
+    min-block-size: 100%; display: grid; place-content: center; text-align: center; gap: .15rem;
+    padding: .7rem; border-block-end: 1px solid #789382; scroll-snap-align: start;
+  }
+  .snap-panel:nth-child(2) { background: #dce8db; }
+  .snap-panel:nth-child(3) { background: #f0e4cf; }
+  .snap-panel p { margin: 0; color: #315941; }
+  /* 无额外平滑滚动；开启「减少动态效果」时只在用户主动开启后演示吸附。 */
+</style>
+<style id="css-gradient-comparison">
+  .gradient-stage {
+    min-block-size: 8.15rem; position: relative; isolation: isolate; overflow: hidden;
+    display: grid; place-items: center; padding: .25rem; background: #385a53;
+  }
+  .gradient-label {
+    padding: .25rem .4rem; background: #142d2b; color: #fff; border: 1px solid #dfe9e1;
+    font-size: .82rem; font-weight: 700; text-align: center;
+  }
+  .gradient-aurora { background: #172841; }
+  .gradient-aurora::before {
+    content: ""; position: absolute; z-index: -1; inset: -12%;
+    background: radial-gradient(ellipse 70% 22% at 45% 45%, #a0f2b5, #44bb9ce6 52%, transparent 100%),
+      radial-gradient(ellipse 64% 23% at 55% 62%, #a99cff, #7e63d9b3 55%, transparent 100%);
+    transform: rotate(-23deg); filter: blur(7px);
+  }
+  .gradient-mesh svg { position: absolute; z-index: -1; inset: 0; inline-size: 100%; block-size: 100%; }
+</style>
+</head>
+<body>
+<header class="frame">
+  <div class="topline">
+    <div class="eyebrow">UI FIELD GUIDE / 02</div>
+    <a href="布局图鉴.html">← 布局图鉴</a>
+  </div>
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">界面技法标本 · MOTION &amp; MATERIAL</div>
+      <h1>动效与材质图鉴</h1>
+      <p>同一元素，只改变一个条件。实际操作九组标本，辨认动效怎样传递信息、材质怎样改变层次；展开源码即可核对实现。</p>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 360 208" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <pattern id="hero-grid" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M 16 0 H 0 V 16" fill="none" stroke="#7fa18b" stroke-opacity=".37" stroke-width=".7"/></pattern>
+          <pattern id="hero-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M 0 0 V 5" stroke="#a9bfa6" stroke-width="1.2"/></pattern>
+        </defs>
+        <rect width="360" height="208" fill="url(#hero-grid)"/>
+        <g fill="none" stroke="#a4bfa7" stroke-width="1">
+          <path d="M32 129 H328 M32 73 H328 M81 25 V168 M274 25 V168" opacity=".62" stroke-dasharray="3 5"/>
+          <rect x="78" y="68" width="74" height="64" rx="4" fill="url(#hero-hatch)"/>
+          <rect x="103" y="55" width="74" height="64" rx="4" fill="#365b46"/>
+          <rect x="128" y="42" width="74" height="64" rx="4" fill="#527862"/>
+          <path d="M206 111 C225 111 227 66 242 66 C257 66 252 108 266 108 C276 108 274 94 288 94 H316" stroke="#f0d39e" stroke-width="1.75"/>
+          <path d="M43 39 H59 M51 31 V47 M303 150 H319 M311 142 V158"/>
+          <circle cx="242" cy="66" r="4" fill="#234332" stroke="#f0d39e"/>
+        </g>
+      </svg>
+      <div class="axis"><span>FIG. 02</span><span>OPAQUE → TRANSLUCENT</span></div>
+    </div>
+  </div>
+  <div class="indexline">
+    <span class="eyebrow">标本索引 / 09</span>
+    <nav aria-label="标本索引"><a href="#techniques"><strong>查全部 68 个编号 ↓</strong></a>
+      <a href="#enter-motion">01 进场</a><a href="#spring-motion">02 回弹</a><a href="#detail-drawer">03 抽屉</a><a href="#scroll-reveal">04 滚动</a><a href="#glassmorphism">05 玻璃</a><a href="#neumorphism">06 凸凹</a><a href="#skeleton-screen">07 骨架</a><a href="#scroll-snap">08 吸附</a><a href="#gradient-comparison">09 渐变</a>
+    </nav>
+  </div>
+</header>
+<main class="frame gallery" aria-label="九组界面技法标本">
+  <section class="spec" id="enter-motion" aria-labelledby="title-entrance">
+    <div class="spec-head"><div><div class="meta">01 / ENTRANCE</div><h2 id="title-entrance">淡入 vs 滑入</h2></div><span class="chip" title="4.4 页面转场（相关）">相关 4.4</span></div>
+    <p>同一标记：无动效立即就位，淡入只改透明度，滑入只改位置。需要表达来源方向时，才选滑入。</p>
+    <div class="sample" data-specimen>
+      <div class="toolrow"><span class="stage-title">对照试台 / 640 ms</span><button class="action" id="replay-entrance" type="button">播放进场</button></div>
+      <div class="cells">
+        <figure class="cell"><div class="centered ruled"><span class="artifact-mark" aria-hidden="true">A</span></div><figcaption>无动效</figcaption></figure>
+        <figure class="cell"><div class="centered ruled"><span class="artifact-mark fade-in" aria-hidden="true">A</span></div><figcaption>只淡入</figcaption></figure>
+        <figure class="cell"><div class="centered ruled"><span class="artifact-mark slide-in" aria-hidden="true">A</span></div><figcaption>只滑入</figcaption></figure>
+      </div>
+    </div>
+    <details class="source"><summary>查看源码 <span>HTML / CSS / JS</span></summary><div class="source-body"></div></details>
+  </section>
+  <section class="spec" id="spring-motion" aria-labelledby="title-spring">
+    <div class="spec-head"><div><div class="meta">02 / RESPONSE</div><h2 id="title-spring">微交互 / 弹簧回弹</h2></div><span class="chip" title="4.1 微交互；4.6 弹簧物理动效（近似）">4.1 · ≈4.6</span></div>
+    <p>按下后先明确切换状态，再用一次过冲与衰减强化反馈。这里是 CSS 关键帧近似，不是弹簧物理求解。</p>
+    <div class="sample" data-specimen>
+      <div class="toolrow"><span class="stage-title">状态标本 / 480 ms</span></div>
+      <div class="centered ruled">
+        <button id="spring-trigger" type="button" aria-pressed="false"><span class="spring-icon" aria-hidden="true">☆</span><span>标记</span></button>
+      </div>
+      <p class="hint">再按一次取消；用 Tab 聚焦，再按 Enter 或空格也可以。</p>
+    </div>
+    <details class="source"><summary>查看源码 <span>HTML / CSS / JS</span></summary><div class="source-body"></div></details>
+  </section>
+  <section class="spec" id="detail-drawer" aria-labelledby="title-drawer">
+    <div class="spec-head"><div><div class="meta">03 / LAYER</div><h2 id="title-drawer">详情抽屉</h2></div><span class="chip" title="4.4 页面转场：覆盖式进场（相关）；抽屉无独立编号">相关 4.4</span></div>
+    <p>保留底层上下文，在右侧覆盖一层详情。这里用原生模态对话框：打开后聚焦关闭键，Esc 可退出，关闭后焦点返回入口。</p>
+    <div class="sample" data-specimen>
+      <div class="toolrow"><span class="stage-title">覆盖式转场 / 280 ms</span></div>
+      <div class="drawer-stage ruled">
+        <div class="drawer-row"><span class="drawer-mark" aria-hidden="true">03</span><strong>对比标本</strong><button class="action action-light" id="open-detail" type="button" aria-haspopup="dialog" aria-controls="detail-panel">打开详情 →</button></div>
+      </div>
+      <p class="hint">仅打开时滑入；关闭即退场，不让动画拖延操作。</p>
+      <dialog id="detail-panel" aria-labelledby="detail-panel-title">
+        <div class="drawer-head">
+          <div><div class="eyebrow">FIG. 03 / DETAIL</div><h3 id="detail-panel-title">标本详情</h3></div>
+          <button type="button" id="close-detail" class="action action-light" autofocus>关闭</button>
+        </div>
+        <p>这是一层原生模态抽屉，背后的图鉴仍然可见，但暂时不能操作。</p>
+        <p>试一试 Esc 或「关闭」按钮：退出后，焦点会回到「打开详情」。</p>
+      </dialog>
+    </div>
+    <details class="source"><summary>查看源码 <span>HTML / CSS / JS</span></summary><div class="source-body"></div></details>
+  </section>
+  <section class="spec" id="scroll-reveal" aria-labelledby="title-scroll">
+    <div class="spec-head"><div><div class="meta">04 / VIEWPORT</div><h2 id="title-scroll">滚动进场</h2></div><span class="chip" title="5.3 滚动进场动画">5.3</span></div>
+    <p>只观察试台内部视口。标本露出 34% 时淡入并上浮；看过后保持可见，重置可回到顶部重新触发。</p>
+    <div class="sample" data-specimen>
+      <div class="toolrow"><span class="stage-title">独立滚动区 / 34% 阈值</span><button class="action" id="reset-reveal" type="button">重置滚动</button></div>
+      <div class="ruled" id="reveal-viewport" role="region" aria-label="滚动进场试台" tabindex="0">
+        <div class="reveal-intro">↓ 在此区域向下滚动</div>
+        <div class="reveal-slot"><p class="reveal-item">01 / 淡入</p></div>
+        <div class="reveal-slot"><p class="reveal-item">02 / 上浮</p></div>
+        <div class="reveal-slot"><p class="reveal-item">03 / 就位</p></div>
+      </div>
+      <p class="hint">可用滚轮、触摸，或聚焦试台后按 ↓ / Page Down。三枚标本共享同一动画。</p>
+    </div>
+    <details class="source"><summary>查看源码 <span>HTML / CSS / JS</span></summary><div class="source-body"></div></details>
+  </section>
+  <section class="spec" id="glassmorphism" aria-labelledby="title-glass">
+    <div class="spec-head"><div><div class="meta">05 / SURFACE</div><h2 id="title-glass">玻璃拟态</h2></div><span class="chip" title="1.4 玻璃拟态">1.4</span></div>
+    <p>同卡片、同条纹底。半透明保留清晰纹理，毛玻璃进一步模糊背后纹理，但不模糊卡片文字。</p>
+    <div class="sample" data-specimen>
+      <div class="toolrow"><span class="stage-title">材质切片 / 背景滤镜</span></div>
+      <div class="cells">
+        <figure class="cell"><div class="centered glass-ground"><div class="glass-card">标本</div></div><figcaption>不透明</figcaption></figure>
+        <figure class="cell"><div class="centered glass-ground"><div class="glass-card translucent">标本</div></div><figcaption>半透明</figcaption></figure>
+        <figure class="cell"><div class="centered glass-ground"><div class="glass-card frosted">标本</div></div><figcaption>半透明 + 模糊</figcaption></figure>
+      </div>
+      <p class="hint">比较卡片内外的斜线清晰度。环境不支持背景滤镜时，第三组降级为实底。</p>
+    </div>
+    <details class="source"><summary>查看源码 <span>HTML / CSS</span></summary><div class="source-body"></div></details>
+  </section>
+  <section class="spec" id="neumorphism" aria-labelledby="title-soft">
+    <div class="spec-head"><div><div class="meta">06 / RELIEF</div><h2 id="title-soft">新拟态</h2></div><span class="chip" title="1.1 扁平化基线；1.3 新拟态">1.1 · 1.3</span></div>
+    <p>同背景、同控件，只替换双重阴影：外阴影让控件凸起，内阴影让控件凹陷。不要把阴影当成唯一状态提示。</p>
+    <div class="sample" data-specimen>
+      <div class="toolrow"><span class="stage-title">光影切片 / 左上光源</span></div>
+      <div class="cells">
+        <figure class="cell"><div class="centered soft-ground"><button class="soft-control" type="button" aria-label="控件：平面标本">控件</button></div><figcaption>平面</figcaption></figure>
+        <figure class="cell"><div class="centered soft-ground"><button class="soft-control raised" type="button" aria-label="控件：外阴影标本">控件</button></div><figcaption>外阴影 · 凸</figcaption></figure>
+        <figure class="cell"><div class="centered soft-ground"><button class="soft-control sunken" type="button" aria-label="控件：内阴影标本">控件</button></div><figcaption>内阴影 · 凹</figcaption></figure>
+      </div>
+      <p class="hint">仅展示外观，不执行操作。保留深色文字、边框和独立焦点环；仅凭柔和阴影的对比度不足。</p>
+    </div>
+    <details class="source"><summary>查看源码 <span>HTML / CSS</span></summary><div class="source-body"></div></details>
+  </section>
+  <section class="spec" id="skeleton-screen" aria-labelledby="title-skeleton">
+    <div class="spec-head"><div><div class="meta">07 / LOADING</div><h2 id="title-skeleton">纯提示 vs 骨架屏</h2></div><span class="chip" title="4.2 骨架屏">4.2</span></div>
+    <p>左侧只说明正在加载；右侧用占位块预告图标、标题和正文的位置。两侧等待的是同一份结果，骨架不会让请求更快。</p>
+    <div class="sample" data-specimen>
+      <div class="toolrow"><span class="stage-title">共享模拟等待 / 1.8 秒</span><div><button class="action" id="load-skeleton" type="button">开始加载</button> <button class="action action-light" id="cancel-skeleton" type="button" aria-disabled="true">取消</button></div></div>
+      <div class="cells loading-cells">
+        <figure class="cell"><div class="centered ruled loading-preview" id="plain-loading" aria-busy="false"><p>等待开始</p></div><figcaption>纯文字提示</figcaption></figure>
+        <figure class="cell"><div class="centered ruled loading-preview" id="layout-loading" aria-busy="false"><p>等待开始</p></div><figcaption>布局占位</figcaption></figure>
+      </div>
+      <p class="hint" id="skeleton-status" role="status">等待开始 · 不发送网络请求</p>
+      <template id="loading-placeholder">
+        <div class="loading-card" aria-hidden="true"><span class="loading-avatar loading-block"></span><span class="loading-title-block loading-block"></span><span class="loading-line loading-block"></span><span class="loading-line loading-block"></span></div>
+      </template>
+      <template id="loading-result">
+        <div class="loading-card"><span class="loading-avatar" aria-hidden="true">A</span><strong>更新日志</strong><p>标本已就绪，可以查看详情。</p></div>
+      </template>
+    </div>
+    <details class="source"><summary>查看源码 <span>HTML / CSS / JS</span></summary><div class="source-body"></div></details>
+  </section>
+  <section class="spec" id="scroll-snap" aria-labelledby="title-snap">
+    <div class="spec-head"><div><div class="meta">08 / SNAP</div><h2 id="title-snap">自由滚动 vs 滚动吸附</h2></div><span class="chip" title="5.5 滚动吸附">5.5</span></div>
+    <p>同一个滚动区、同样三屏。关闭时可停在两屏之间；开启后，松手或停止滚动时会对齐到一屏。</p>
+    <div class="sample" data-specimen>
+      <div class="toolrow"><span class="stage-title" id="snap-mode" aria-live="polite">当前：自由滚动</span><button class="action" id="toggle-snap" type="button" aria-pressed="false" aria-controls="snap-viewport">滚动吸附</button></div>
+      <div class="ruled" id="snap-viewport" role="region" aria-label="三屏滚动试台" aria-describedby="snap-hint" tabindex="0">
+        <div class="snap-panel"><strong>01 / 苔绿</strong><p>从这里向下滚动 ↓</p></div>
+        <div class="snap-panel"><strong>02 / 松针</strong><p>观察分屏边缘停在哪里</p></div>
+        <div class="snap-panel"><strong>03 / 琥珀</strong><p>到达试台末尾</p></div>
+      </div>
+      <p class="hint" id="snap-hint">用滚轮、触摸，或 Tab 聚焦试台后按 ↑ / ↓、Page Up / Page Down。切换吸附后再以相同方式滚动。</p>
+    </div>
+    <details class="source"><summary>查看源码 <span>HTML / CSS / JS</span></summary><div class="source-body"></div></details>
+  </section>
+  <section class="spec" id="gradient-comparison" aria-labelledby="title-gradient">
+    <div class="spec-head"><div><div class="meta">09 / COLOR</div><h2 id="title-gradient">极光渐变 vs 网格渐变</h2></div><span class="chip" title="2.1 极光渐变；2.2 网格渐变">2.1 · 2.2</span></div>
+    <p>同一张标签：极光常用斜向扩散的柔光带，网格常让多个色点平滑交织。两者能重叠，这里对比的是视觉习惯，不是严格的数学分类。</p>
+    <div class="sample" data-specimen>
+      <div class="toolrow"><span class="stage-title">背景切片 / 全部静态</span></div>
+      <div class="cells">
+        <figure class="cell"><div class="gradient-stage"><span class="gradient-label">标本</span></div><figcaption>纯色基线</figcaption></figure>
+        <figure class="cell"><div class="gradient-stage gradient-aurora"><span class="gradient-label">标本</span></div><figcaption>极光 · 柔光带</figcaption></figure>
+        <figure class="cell">
+          <div class="gradient-stage gradient-mesh">
+            <svg viewBox="0 0 160 128" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="mesh-top-row"><stop stop-color="#6043a0"/><stop offset=".46" stop-color="#d391da"/><stop offset="1" stop-color="#2b81ac"/></linearGradient>
+                <linearGradient id="mesh-bottom-row"><stop stop-color="#f5aa76"/><stop offset=".52" stop-color="#5e47a1"/><stop offset="1" stop-color="#8ee9bc"/></linearGradient>
+                <linearGradient id="mesh-row-blend" x2="0%" y2="100%"><stop stop-color="white" stop-opacity="0"/><stop offset="1" stop-color="white"/></linearGradient>
+                <mask id="mesh-blend-mask"><rect width="160" height="128" fill="url(#mesh-row-blend)"/></mask>
+              </defs>
+              <rect width="160" height="128" fill="url(#mesh-top-row)"/>
+              <rect width="160" height="128" fill="url(#mesh-bottom-row)" mask="url(#mesh-blend-mask)"/>
+            </svg>
+            <span class="gradient-label">标本</span>
+          </div>
+          <figcaption>网格 · 多点交织</figcaption>
+        </figure>
+      </div>
+      <p class="hint">极光用 CSS 叠加并模糊两条光带；网格用 SVG 将上下两排色点横向插值，再纵向混合，是简化的网格近似。</p>
+    </div>
+    <details class="source"><summary>查看源码 <span>HTML / CSS</span></summary><div class="source-body"></div></details>
+  </section>
+</main>
+<section class="guide" id="techniques" data-guide="motion" aria-labelledby="techniques-title">
+  <h2 id="techniques-title">完整技法目录</h2>
+  <p>按原参考编号排列。展开即运行；「近似」只复现特征，「示意」演示流程，不代表原生技术、硬件或模型已经接入。</p>
+  <div class="guide-tools"><label for="technique-search">查找技法</label><input type="search" id="technique-search" placeholder="章节号、中文或英文术语"><span class="guide-count" role="status">正在加载目录…</span></div>
+  <nav class="guide-chapters" aria-label="动效与材质章节"></nav><div class="guide-list"></div>
+</section>
+<footer class="frame page-foot">
+  <span>术语编号：<a href="动效界面设计风格全景分类参考.md">动效界面设计风格全景分类参考</a> · 示例均可离线运行；系统开启减少动态效果时省略非必要动画。</span>
+  <a href="布局图鉴.html">浏览布局图鉴 →</a>
+</footer>
+<script>
+  function bindEntrance() {
+    const card = document.querySelector('#enter-motion');
+    document.querySelector('#replay-entrance').addEventListener('click', () => {
+      card.classList.remove('is-playing');
+      void card.offsetWidth; // 先提交无动画状态，让下一次点击也能重播。
+      card.classList.add('is-playing');
+    });
+  }
+
+  function bindSpring() {
+    const button = document.querySelector('#spring-trigger');
+    const icon = button.querySelector('.spring-icon');
+    button.addEventListener('click', () => {
+      const pressed = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(pressed));
+      icon.textContent = pressed ? '★' : '☆';
+      button.classList.remove('is-bouncing');
+      void button.offsetWidth;
+      button.classList.add('is-bouncing');
+    });
+  }
+
+  function bindDrawer() {
+    const detail = document.querySelector('#detail-panel');
+    const opener = document.querySelector('#open-detail');
+    opener.addEventListener('click', () => detail.showModal());
+    document.querySelector('#close-detail').addEventListener('click', () => detail.close());
+    // Esc 由原生 dialog 关闭；按钮关闭和 Esc 走同一个焦点恢复路径。
+    detail.addEventListener('close', () => opener.focus());
+  }
+
+  function bindReveal() {
+    const root = document.querySelector('#reveal-viewport');
+    const items = [...root.querySelectorAll('.reveal-item')];
+    let observer;
+    function resetReveal() {
+      root.scrollTop = 0;
+      if (!('IntersectionObserver' in window)) return; // 不支持时内容保持可见。
+      observer?.disconnect();
+      items.forEach(item => item.classList.remove('is-visible'));
+      root.setAttribute('data-observing', '');
+      observer = new IntersectionObserver((entries, current) => {
+        if (current !== observer) return;
+        for (const entry of entries) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.34) {
+            entry.target.classList.add('is-visible');
+            current.unobserve(entry.target);
+          }
+        }
+      }, { root, threshold: 0.34 });
+      items.forEach(item => observer.observe(item));
+    }
+    document.querySelector('#reset-reveal').addEventListener('click', resetReveal);
+    resetReveal();
+  }
+
+  function bindSkeleton() {
+    const load = document.querySelector('#load-skeleton');
+    const cancel = document.querySelector('#cancel-skeleton');
+    const status = document.querySelector('#skeleton-status');
+    const plain = document.querySelector('#plain-loading');
+    const layout = document.querySelector('#layout-loading');
+    const placeholder = document.querySelector('#loading-placeholder');
+    const result = document.querySelector('#loading-result');
+    let timer = null;
+
+    function showText(panel, text) {
+      const message = document.createElement('p');
+      message.textContent = text;
+      panel.replaceChildren(message);
+    }
+
+    function setBusy(busy) {
+      for (const panel of [plain, layout]) panel.setAttribute('aria-busy', String(busy));
+      cancel.setAttribute('aria-disabled', String(!busy));
+    }
+
+    load.addEventListener('click', () => {
+      clearTimeout(timer); // 重播先清除旧计时，两栏不会被旧结果覆盖。
+      setBusy(true);
+      load.textContent = '重新计时';
+      showText(plain, '正在加载…');
+      layout.replaceChildren(placeholder.content.cloneNode(true));
+      status.textContent = '正在加载 · 两侧等待同一份内容…';
+      timer = setTimeout(() => {
+        timer = null;
+        for (const panel of [plain, layout]) panel.replaceChildren(result.content.cloneNode(true));
+        setBusy(false);
+        load.textContent = '重播加载';
+        status.textContent = '加载完成 · 两侧内容相同';
+      }, 1800);
+    });
+
+    cancel.addEventListener('click', () => {
+      if (timer === null) return;
+      clearTimeout(timer);
+      timer = null;
+      for (const panel of [plain, layout]) showText(panel, '等待开始');
+      setBusy(false);
+      load.textContent = '开始加载';
+      status.textContent = '已取消 · 可以重新开始';
+    });
+  }
+
+  function bindSnap() {
+    const viewport = document.querySelector('#snap-viewport');
+    const toggle = document.querySelector('#toggle-snap');
+    const mode = document.querySelector('#snap-mode');
+    toggle.addEventListener('click', () => {
+      const enabled = viewport.toggleAttribute('data-snap');
+      toggle.setAttribute('aria-pressed', String(enabled));
+      mode.textContent = enabled ? '当前：滚动吸附' : '当前：自由滚动';
+    });
+  }
+
+  // 源码直接从试台标记、作用域样式及实际绑定函数提取，避免演示与片段分离。
+  const bindings = {
+    'enter-motion': bindEntrance,
+    'spring-motion': bindSpring,
+    'detail-drawer': bindDrawer,
+    'scroll-reveal': bindReveal,
+    'skeleton-screen': bindSkeleton,
+    'scroll-snap': bindSnap
+  };
+  function addSource(target, label, text) {
+    const heading = document.createElement('h3');
+    heading.textContent = label;
+    const pre = document.createElement('pre');
+    pre.tabIndex = 0;
+    pre.setAttribute('aria-label', `${label} 源码`);
+    const code = document.createElement('code');
+    code.textContent = text;
+    pre.append(code);
+    target.append(heading, pre);
+  }
+  document.querySelectorAll('.spec').forEach(spec => {
+    const target = spec.querySelector('.source-body');
+    const note = document.createElement('p');
+    note.textContent = '取自此处正在运行的示例。未展开全页通用排版样式；片段中的外层 ID 与本节一致。';
+    target.append(note);
+    const specimen = spec.querySelector('[data-specimen]').outerHTML;
+    const pad = specimen.match(/\n( *)<\/div>$/)?.[1] || '';
+    const markup = specimen.replaceAll(`\n${pad}`, '\n  ');
+    addSource(target, 'HTML', `<section id="${spec.id}">\n  ${markup}\n</section>`);
+    const css = document.getElementById(`css-${spec.id}`).textContent.trimEnd().replace(/^  /gm, '').trimStart();
+    addSource(target, 'CSS', css);
+    const bind = bindings[spec.id];
+    if (bind) {
+      const script = bind.toString().replace(/\n  /g, '\n');
+      addSource(target, 'JavaScript', `${script}\n\n${bind.name}();`);
+      bind();
+    }
+  });
+</script>
+<script src="图鉴目录数据.js"></script>
+<script src="动效技法-材质风格.js"></script>
+<script src="动效技法-交互空间.js"></script>
+<script src="动效技法-结构数据.js"></script>
+<script src="图鉴目录.js"></script>
+</body>
+</html>

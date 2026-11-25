@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工单队列 · 受理台 UI 样板</title>
+<style>
+:root{color-scheme:light;--paper:#f5f4ef;--surface:#fffefa;--ink:#222820;--muted:#576257;--line:#dbdfd4;--accent:#365d40;--accent-light:#e9f0e4;--rust:#96442a;font-family:system-ui,"Microsoft YaHei",sans-serif}
+*,*::before,*::after{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.55}button,input,select{font:inherit;color:inherit}button,select{cursor:pointer}button{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}button:hover{border-color:var(--accent)}:focus-visible{outline:2px solid var(--accent);outline-offset:3px}h1,h2,p{margin:0}.top{background:var(--surface);border-bottom:1px solid var(--line)}.top-inner{max-width:1256px;margin:auto;padding:14px 28px;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-weight:750}.mark{display:grid;place-items:center;background:var(--accent);color:white;border-radius:9px;width:32px;height:32px;font-size:16px}.mono{font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em}.top .mono{font-size:11px;color:var(--muted)}main{max-width:1256px;margin:auto;padding:34px 28px 48px}.intro{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:22px}.eyebrow{color:var(--accent);font-size:11px;font-weight:750;letter-spacing:.13em}.intro h1{font-size:clamp(31px,5vw,48px);line-height:1.13;letter-spacing:-.045em;margin:8px 0 9px}.muted{color:var(--muted)}.scenario{display:grid;gap:4px;color:var(--muted);font-size:12px}.scenario select{font-size:13px}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:22px;background:var(--accent-light);border:1px solid #d5e2d1;border-radius:12px}.metric{padding:13px 18px;min-width:0}.metric+.metric{border-left:1px solid #d5e2d1}.metric span{display:block;font-size:12px;color:var(--muted)}.metric strong{display:block;font-size:25px;line-height:1.2;margin-top:4px;font-variant-numeric:tabular-nums}.metric:nth-child(2) strong{color:var(--rust)}.panel{background:var(--surface);border:1px solid var(--line);border-radius:13px}.panel-head{padding:15px 17px 12px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}.panel-head h2{font-size:17px}.filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap}input,select{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:8px 10px;min-height:39px}input{width:220px;min-width:0}.result{padding:0 17px 11px;color:var(--muted);font-size:12px}.columns,.ticket{display:grid;grid-template-columns:105px minmax(0,1fr) 112px 106px 114px;gap:14px;align-items:center;padding:0 17px}.columns{padding-block:9px;background:#f1f3eb;color:var(--muted);border-block:1px solid var(--line);font-size:12px}.ticket{width:100%;text-align:left;min-height:56px;border:0;border-radius:0;background:transparent}.ticket:hover{background:#f2f6ed}.ticket:focus-visible{outline-offset:-3px}#records>div+div .ticket{border-top:1px solid var(--line)}#records>div:last-child .ticket{border-radius:0 0 12px 12px}.ticket-id,.time{font-size:12px;color:var(--muted)}.ticket-title{min-width:0;overflow-wrap:anywhere;font-weight:650}.pill{justify-self:start;background:#eef0e7;color:#465344;border-radius:30px;white-space:nowrap;padding:3px 8px;font-size:12px}.pill[data-status="待处理"]{background:#f9e9df;color:#873f27}.pill[data-status="处理中"]{background:#e7f0e4;color:#365d40}.more{display:flex;align-items:center;justify-content:space-between;gap:5px}.arrow{color:var(--accent)}.notice{padding:28px 17px;border-top:1px solid var(--line)}.notice strong{font-size:16px}.notice p{margin:4px 0 11px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}dialog{position:fixed;inset:0 0 0 auto;margin:0;width:min(480px,100%);max-width:none;height:100%;height:100dvh;max-height:none;padding:0;border:0;border-left:1px solid var(--line);background:var(--surface);color:var(--ink);overflow:auto}dialog::backdrop{background:#22282040}dialog[open]{animation:enter .18s ease-out}@keyframes enter{from{transform:translateX(16px);opacity:.62}to{transform:translateX(0);opacity:1}}@media(prefers-reduced-motion:reduce){dialog[open]{animation:none}}.detail-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:18px 24px;border-bottom:1px solid var(--line)}.detail-body{padding:24px}.detail-body h2{font-size:clamp(23px,4vw,29px);line-height:1.3;overflow-wrap:anywhere;margin:10px 0 16px}.detail-body dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 14px;padding:17px 0;border-block:1px solid var(--line)}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}.detail-body h3{margin-bottom:6px}.detail-body p{overflow-wrap:anywhere}.primary{background:var(--accent);color:white;border-color:var(--accent);margin-top:22px}.primary:hover{background:#284b31}html:has(dialog[open]){overflow:hidden}html{scrollbar-gutter:stable}
+@media(max-width:720px){html{scrollbar-gutter:auto}.top-inner{padding:12px 15px}main{padding:23px 15px 35px}.intro{align-items:start;flex-direction:column;margin-bottom:15px}.metric{padding:10px 8px}.metric strong{font-size:21px}.metrics{margin-bottom:15px}.panel-head{padding:12px;gap:8px}.filters{width:100%}.filters input{flex:1;width:auto;min-width:100px}.result{padding-inline:12px}.columns{display:none}.ticket{grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;padding:9px 12px;border-top:1px solid var(--line)}.ticket-title{grid-column:1/-1;grid-row:2}.ticket-id{grid-column:1;grid-row:1}.ticket .pill{grid-column:2;grid-row:1;justify-self:end}.owner{grid-column:1;grid-row:3;color:var(--muted);font-size:12px}.more{grid-column:2;grid-row:3;gap:8px}.detail-head,.detail-body{padding-inline:16px}dialog{width:100%;border-left:0}.detail-head button{min-height:44px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><div class="brand"><span class="mark" aria-hidden="true">受</span> 岚线 · 受理台</div><span class="mono">PATTERN 01 / DEMO</span></div></header>
+<main>
+  <div class="intro"><div><p class="eyebrow mono">OPERATIONS / SERVICE DESK</p><h1>工单队列</h1><p class="muted">从队列定位、查看并处理服务请求。</p></div><label class="scenario">演示数据状态<select id="scenario"><option value="normal">正常数据</option><option value="empty">暂无数据</option><option value="error">加载失败</option></select></label></div>
+  <div class="metrics" aria-label="全队列统计"><div class="metric"><span>全部工单</span><strong id="total">—</strong></div><div class="metric"><span>待处理</span><strong id="pending">—</strong></div><div class="metric"><span>处理中</span><strong id="active">—</strong></div></div>
+  <section class="panel" aria-labelledby="queue-label"><div class="panel-head"><h2 id="queue-label">服务请求</h2><div class="filters"><label for="search" class="sr-only">搜索编号或标题</label><input id="search" type="search" placeholder="搜索编号或标题"><label for="filter" class="sr-only">按状态筛选</label><select id="filter"><option value="">全部状态</option><option>待处理</option><option>处理中</option><option>已结单</option></select></div></div>
+  <p class="result" id="result"></p><div class="columns" id="columns" aria-hidden="true"><span>编号</span><span>工单标题</span><span>状态</span><span>负责人</span><span>最近更新</span></div><div id="records" role="list" aria-label="工单"></div><div class="notice" id="notice" hidden><strong id="notice-title"></strong><p class="muted" id="notice-text"></p><button type="button" id="recover"></button></div></section>
+  <p class="sr-only" id="live" role="status" aria-atomic="true"></p>
+</main>
+<dialog id="detail" aria-labelledby="detail-title"><div class="detail-head"><p class="eyebrow mono" id="detail-id"></p><button id="close-detail" type="button" autofocus>关闭详情</button></div><div class="detail-body"><p class="eyebrow">服务请求详情</p><h2 id="detail-title"></h2><span class="pill" id="detail-status"></span><dl><dt>负责人</dt><dd id="detail-owner"></dd><dt>最近更新</dt><dd id="detail-time"></dd></dl><h3>请求说明</h3><p class="muted" id="detail-description"></p><button class="primary" id="advance" type="button"></button></div></dialog>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const topics = [
+ '批量导入工单时，含特殊字符的部门名称无法识别', '申请开通华东区仓储报表的只读权限', '移动端提交表单后未收到确认通知', '月度对账明细中的税额与导出文件不一致', '调整新员工入职审批的默认负责人', '修复配送地址变更后历史记录不刷新的问题', '归档过期的供应商资质文件', '更换服务账号的联系人和通知邮箱', '补发上周的例行维护完成报告', '新增门店自助终端的值班交接说明', '查找上月费用预警通知的发送记录', '确认批量修改库存标签时，跨区域仓库使用的是各自生效日期而非同一个默认日期'
+];
+const owners = ['林予安','周晓','陈言','许亦南','待分配'];
+const states = ['待处理','处理中','已结单','待处理'];
+const data = Array.from({length:36}, (_, i) => ({id:`SD-${2048-i}`,title:topics[i%12]+(['',' · 复核',' · 跟进'][Math.floor(i/12)]),owner:owners[i%5],status:states[i%4],time:`${i<18?'06-18':'06-17'} ${String(16-i%9).padStart(2,'0')}:${i%2?'20':'45'}`}));
+const records = $('records'), detail = $('detail'), search = $('search'), filter = $('filter'), scenario = $('scenario');
+let selected = null, opener = null, changed = false;
+function announce(message){$('live').textContent=message;}
+function gotResults(){return data.filter(t => (!filter.value || t.status===filter.value) && `${t.id} ${t.title}`.toLowerCase().includes(search.value.trim().toLowerCase()));}
+function span(className,value){const el=document.createElement('span');el.className=className;el.textContent=value;return el;}
+function render(message=''){
+ const isError=scenario.value==='error', isEmpty=scenario.value==='empty';
+ const visible=isError||isEmpty?[]:gotResults();
+ $('total').textContent=isError?'—':isEmpty?0:data.length;
+ $('pending').textContent=isError?'—':isEmpty?0:data.filter(t=>t.status==='待处理').length;
+ $('active').textContent=isError?'—':isEmpty?0:data.filter(t=>t.status==='处理中').length;
+ const summary=isError?'队列暂不可用':`显示 ${visible.length} 条工单`;
+ $('result').textContent=summary;
+ $('columns').hidden=!visible.length;
+ records.hidden=!visible.length;
+ records.replaceChildren(...visible.map(t=>{
+   const item=document.createElement('div');item.setAttribute('role','listitem');
+   const button=document.createElement('button');button.type='button';button.className='ticket';button.dataset.ticket=t.id;button.setAttribute('aria-haspopup','dialog');
+   const pill=span('pill',t.status);pill.dataset.status=t.status;
+   const more=span('more','');const arrow=span('arrow','→');arrow.setAttribute('aria-hidden','true');more.append(span('time',t.time),arrow);
+   button.append(span('ticket-id mono',t.id),span('ticket-title',t.title),pill,span('owner',t.owner),more);
+   button.addEventListener('click',()=>openDetail(t,button));item.append(button);return item;
+ }));
+ $('notice').hidden=!!visible.length;
+ if(!visible.length){
+   const copy=isError?['工单加载失败','筛选条件已保留，可以重试。','重试加载']:isEmpty?['暂无工单','新请求进入受理队列后会显示在这里。','']:['没有符合条件的工单','试试更短的关键词，或者清除状态筛选。','清除筛选'];
+   $('notice-title').textContent=copy[0];$('notice-text').textContent=copy[1];$('recover').textContent=copy[2];$('recover').hidden=!copy[2];
+ }
+ announce([message,summary,visible.length?'':$('notice-title').textContent].filter(Boolean).join('。'));
+}
+function showDetail(){
+ $('detail-id').textContent=selected.id;$('detail-title').textContent=selected.title;$('detail-status').textContent=selected.status;$('detail-status').dataset.status=selected.status;
+ $('detail-owner').textContent=selected.owner;$('detail-time').textContent=selected.time;
+ $('detail-description').textContent=`来件主题：${selected.title}。请先核对请求所涉及的业务范围和原始记录，处理后将工单移至下一状态。此样板不会发送通知或写入后端。`;
+ $('advance').hidden=selected.status==='已结单';$('advance').textContent=selected.status==='待处理'?'开始处理':'标记为已结单';
+}
+function openDetail(ticket,button){selected=ticket;opener=button;changed=false;showDetail();detail.showModal();}
+$('advance').addEventListener('click',()=>{selected.status=selected.status==='待处理'?'处理中':'已结单';selected.time='刚刚';changed=true;detail.close();});
+$('close-detail').addEventListener('click',()=>detail.close());
+detail.addEventListener('close',()=>{
+ const y=window.scrollY;
+ if(changed)render(`${selected.id} 已更新为${selected.status}`);
+ const same=opener?.isConnected?opener:records.querySelector(`[data-ticket="${selected.id}"]`);
+ window.scrollTo(0,y);
+ if(same) same.focus({preventScroll:true});
+ else filter.focus();
+ selected=null;opener=null;
+});
+search.addEventListener('input',()=>render());filter.addEventListener('change',()=>render());scenario.addEventListener('change',()=>render());
+$('recover').addEventListener('click',()=>{
+ const recoveredBy=scenario.value==='error'?'重试成功':'已清除筛选';
+ if(scenario.value==='error')scenario.value='normal';else {search.value='';filter.value='';}
+ render(recoveredBy);search.focus();
+});
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>布局图鉴 · UI Field Guide</title>
+<link rel="stylesheet" href="图鉴目录.css">
+<style>
+:root { color-scheme: light; --paper:#f6f4ed; --ink:#202722; --muted:#506057; --forest:#315941; --line:#ccd3c6; --tile:#e6ede1; --wash:#f9faf6; font:16px/1.6 system-ui,"Microsoft YaHei",sans-serif; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); }
+header, main, footer { max-width:1050px; margin:auto; padding-inline:clamp(14px,4vw,42px); }
+header { padding-top:36px; }
+header p, h1, h2, h3, .board p, .board ul, .board ol { margin:0; }
+h1 { font-size:clamp(36px,8vw,66px); letter-spacing:-.055em; line-height:1.12; margin-block:12px; }
+h2 { font-size:clamp(19px,4vw,25px); line-height:1.35; }
+a { color:var(--forest); text-underline-offset:.2em; }
+.kicker, .index { font:700 12px/1.5 ui-monospace,Consolas,monospace; letter-spacing:.1em; color:var(--forest); }
+.lede, .explain, .note { color:var(--muted); }
+nav { display:flex; flex-wrap:wrap; gap:6px 16px; margin-block:22px; font-size:.9rem; }
+.controls { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 16px; margin-top:20px; padding:10px 14px; border-block:1px solid var(--line); }
+.controls p { margin:0; }
+fieldset { display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; min-width:0; border:0; padding:0; margin:0; }
+legend { padding:0; font-weight:650; }
+label { display:inline-flex; align-items:center; gap:4px; min-height:34px; cursor:pointer; }
+input { accent-color:var(--forest); }
+:focus-visible { outline:2px solid var(--forest); outline-offset:3px; }
+.card { padding-block:24px; border-bottom:1px solid var(--line); }
+.card-head { display:flex; align-items:baseline; gap:10px; }
+.ref { font-size:.8rem; margin:5px 0; color:var(--muted); }
+.explain { font-size:.92rem; margin:8px 0 13px; }
+.frame { padding:10px; background:#e1e5dc; border:1px solid var(--line); }
+.viewport { container-type:inline-size; width:100%; margin:auto; background:var(--wash); border:1px solid var(--line); }
+main:has(#narrow:checked) .viewport { width:min(100%,340px); }
+.board { padding:12px; font-size:.87rem; overflow-wrap:anywhere; }
+.board h3 { font-size:1.06rem; line-height:1.3; }
+.board small { color:var(--muted); }
+.block { display:grid; align-content:center; gap:4px; min-width:0; padding:10px; background:var(--tile); border:1px solid var(--line); }
+.block.is-main { background:#d2e2cd; }
+.block.is-paper { background:#fff; }
+.block ul, .block ol { padding-inline-start:1.25em; }
+.source { margin-top:9px; font-size:.84rem; }
+summary { cursor:pointer; width:fit-content; color:var(--forest); }
+pre { margin:6px 0 0; padding:12px; border:1px solid var(--line); background:#eef0e8; overflow:auto; }
+footer { padding-block:20px 40px; }
+</style>
+<style id="hero-css">
+.hero { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:stretch; }
+.hero .image { min-height:140px; text-align:center; color:#fff; background:linear-gradient(145deg,#315941,#517455); }
+@container (max-width:480px) {
+  .hero { grid-template-columns:1fr; }
+  .hero .image { min-height:100px; }
+}
+</style>
+<style id="grid-css">
+.tile-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.tile-grid .block { min-height:70px; }
+#grid:has(#bento:checked) .feature { grid-column:span 2; grid-row:span 2; }
+@container (max-width:480px) {
+  .tile-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  #grid:has(#bento:checked) .feature { grid-row:span 1; }
+}
+</style>
+<style id="sidebar-css">
+.sidebar-layout { display:grid; grid-template-columns:132px minmax(0,1fr); gap:8px; }
+.sidebar-layout .workspace { min-height:120px; }
+@container (max-width:480px) {
+  .sidebar-layout { grid-template-columns:1fr; }
+  .sidebar-layout ul { display:flex; flex-wrap:wrap; gap:4px 14px; list-style:none; padding:0; }
+}
+</style>
+<style id="split-css">
+.split-layout { display:grid; grid-template-columns:minmax(0,2fr) minmax(0,3fr); gap:8px; }
+.split-layout .list { display:grid; gap:4px; }
+.split-layout .list button { border:1px solid var(--line); background:#fff; color:inherit; font:inherit; padding:5px; text-align:start; cursor:pointer; }
+.split-layout .list button[aria-pressed="true"] { background:#d2e2cd; border-color:var(--forest); }
+@container (max-width:480px) { .split-layout { grid-template-columns:1fr; } }
+</style>
+<style id="article-css">
+.article-layout { display:grid; grid-template-columns:minmax(0,1fr) 140px; gap:8px; align-items:start; }
+.article-layout .article-copy { max-inline-size:42em; grid-area:1 / 1; }
+.article-layout aside { grid-area:1 / 2; }
+@container (max-width:480px) {
+  .article-layout { grid-template-columns:1fr; }
+  .article-layout .article-copy, .article-layout aside { grid-area:auto; }
+}
+</style>
+<style id="masonry-css">
+.gallery-items { margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; align-items:start; }
+.gallery-items li { margin:0; }
+.gallery-swatch { height:var(--swatch); background:repeating-linear-gradient(140deg,#b9ccaf 0 7px,#d2dfcb 7px 14px); }
+#masonry:has(#masonry-flow:checked) .gallery-items { display:block; columns:3; column-gap:8px; }
+#masonry:has(#masonry-flow:checked) .gallery-items li { break-inside:avoid; margin-bottom:8px; }
+@container (max-width:480px) {
+  .gallery-items { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  #masonry:has(#masonry-flow:checked) .gallery-items { columns:2; }
+}
+</style>
+<style id="nav-position-css">
+.nav-board { display:grid; grid-template-rows:auto minmax(104px,1fr); }
+.placement-nav { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); background:#d2e2cd; border:1px solid var(--line); }
+.placement-nav span { padding:7px 4px; text-align:center; }
+.placement-nav span + span { border-left:1px solid var(--line); }
+.placement-nav .current { font-weight:700; text-decoration:underline; text-underline-offset:.2em; }
+#nav-position:has(#nav-bottom:checked) .nav-board { grid-template-rows:minmax(104px,1fr) auto; }
+#nav-position:has(#nav-bottom:checked) .placement-nav { grid-row:2; }
+@container (max-width:480px) { .placement-nav span { min-height:44px; align-content:center; } }
+</style>
+<style id="twelve-css">
+.twelve-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); row-gap:8px; }
+.twelve-grid .track-count { grid-column:1/-1; display:grid; grid-template-columns:subgrid; text-align:center; font-size:.7rem; }
+.twelve-grid .track-count span { background:#e1e9dc; border-inline-start:1px solid #aebeb0; }
+.twelve-grid > .block { grid-column:span 4; margin-inline:2px; min-height:66px; }
+#twelve:has(#twelve-focus:checked) .twelve-grid > .overview { grid-column:span 8; grid-row:span 2; }
+@container (max-width:480px) {
+  .twelve-grid > .block, #twelve:has(#twelve-focus:checked) .twelve-grid > .overview { grid-column:1/-1; grid-row:auto; }
+}
+</style>
+</head>
+<body>
+<header>
+  <p class="kicker">UI FIELD GUIDE / 01</p>
+  <h1>布局图鉴</h1>
+  <p class="lede">把页面缩成可观察的线框。同一套「山间路线」内容，比较信息如何排列、强调和重排。</p>
+  <nav aria-label="图鉴索引"><a href="#techniques"><strong>查全部 48 个编号 ↓</strong></a><a href="#hero">左文右图</a><a href="#grid">栅格 / 便当盒</a><a href="#sidebar">侧边栏</a><a href="#split">列表＋详情</a><a href="#article">正文＋目录</a><a href="#masonry">瀑布流</a><a href="#nav-position">顶部 / 底部导航</a><a href="#twelve">12 栏栅格</a><a href="动效与材质图鉴.html">动效与材质图鉴 →</a></nav>
+</header>
+<main>
+  <div class="controls">
+    <fieldset><legend>统一预览宽度</legend><label><input type="radio" name="width" checked> 宽容器</label><label><input type="radio" name="width" id="narrow"> 窄容器（最多 340px）</label></fieldset>
+    <p class="note">切换会改变下方对照和完整目录的预览宽度；示例内容不变。手机上会自然收窄。</p>
+  </div>
+
+  <section class="card" id="hero">
+    <div class="card-head"><span class="index">01</span><h2>左文右图 Hero</h2></div>
+    <p class="ref"><a href="页面布局设计全景分类参考.md">布局参考 §4.2</a></p>
+    <p class="explain">标题和解释先建立主题，右边的图提供视觉证据。窄屏先显示文字，再把图叠到下方。图块是占位，不依赖真实图片。</p>
+    <div class="frame"><div class="viewport"><div class="board hero" data-example>
+      <div class="block is-paper"><small>周末路线 / 01</small><h3>山间路线</h3><p>沿三条步道找到适合自己的半日行程。</p></div>
+      <div class="block image" role="img" aria-label="步道地图的线框占位">△ 步道地图</div>
+    </div></div></div>
+    <details class="source" data-style="hero-css"><summary>查看演示 HTML / CSS</summary><pre><code></code></pre></details>
+  </section>
+
+  <section class="card" id="grid">
+    <div class="card-head"><span class="index">02</span><h2>等宽栅格 vs. 便当盒布局</h2></div>
+    <p class="ref"><a href="页面布局设计全景分类参考.md">布局参考 §1.8、§1.11</a></p>
+    <p class="explain">等宽栅格让各项权重接近；便当盒保留对齐线，但让「路线总览」跨列跨行。窄屏中主块仍跨列，但不再跨行。</p>
+    <fieldset><legend>栅格结构</legend><label><input type="radio" name="grid" checked> 等宽栅格</label><label><input type="radio" name="grid" id="bento"> 便当盒</label></fieldset>
+    <div class="frame"><div class="viewport"><div class="board tile-grid" data-example>
+      <div class="block is-main feature"><b>路线总览</b><small>3 条步道</small></div>
+      <div class="block">松林道</div>
+      <div class="block">溪谷线</div>
+      <div class="block">观景环</div>
+      <div class="block">出行须知</div>
+      <div class="block">补给站点</div>
+    </div></div></div>
+    <details class="source" data-style="grid-css"><summary>查看演示 HTML / CSS</summary><pre><code></code></pre></details>
+  </section>
+
+  <section class="card" id="sidebar">
+    <div class="card-head"><span class="index">03</span><h2>侧边栏布局</h2></div>
+    <p class="ref"><a href="页面布局设计全景分类参考.md">布局参考 §3.4</a></p>
+    <p class="explain">左栏是全局导航，不是当前记录的详情。宽容器固定导航宽度；窄容器把少量导航项放到顶部，内容区不再被横向挤压。</p>
+    <div class="frame"><div class="viewport"><div class="board sidebar-layout" data-example>
+      <aside class="block" aria-label="全局导航示意"><ul><li><b>路线总览</b></li><li>出行须知</li><li>补给站点</li></ul></aside>
+      <div class="block is-paper workspace"><h3>路线总览</h3><p>松林道、溪谷线、观景环</p></div>
+    </div></div></div>
+    <details class="source" data-style="sidebar-css"><summary>查看演示 HTML / CSS</summary><pre><code></code></pre></details>
+  </section>
+
+  <section class="card" id="split">
+    <div class="card-head"><span class="index">04</span><h2>列表＋详情（Master–Detail）</h2></div>
+    <p class="ref"><a href="页面布局设计全景分类参考.md">布局参考 §1.5 分屏</a>的相关组合；列表驱动详情，不要求等宽。</p>
+    <p class="explain">试着选一条路线：左边选中项决定右边的内容。小预览在窄屏直接把详情放在三条记录之后；实际长队列可用独立视图或抽屉，不必照搬堆叠。</p>
+    <div class="frame"><div class="viewport"><div class="board split-layout" data-example>
+      <div class="block list" role="group" aria-label="选择路线">
+        <button type="button" aria-pressed="true" data-description="2.5 公里 · 平缓林道">松林道</button>
+        <button type="button" aria-pressed="false" data-description="4 公里 · 沿溪步行">溪谷线</button>
+        <button type="button" aria-pressed="false" data-description="6 公里 · 坡路与远景">观景环</button>
+      </div>
+      <div class="block is-paper" aria-live="polite" aria-atomic="true"><h3>松林道</h3><p>2.5 公里 · 平缓林道</p></div>
+    </div></div></div>
+    <details class="source" data-style="split-css" data-script="split-js"><summary>查看演示 HTML / CSS / JS</summary><pre><code></code></pre></details>
+  </section>
+
+  <section class="card" id="article">
+    <div class="card-head"><span class="index">05</span><h2>文章双栏：正文＋目录</h2></div>
+    <p class="ref"><a href="页面布局设计全景分类参考.md">布局参考 §5.2</a></p>
+    <p class="explain">正文主导阅读，目录只定位本页章节，不切换页面。宽容器把目录放到右侧；窄容器移到正文上方，让正文独占一行。</p>
+    <div class="frame"><div class="viewport"><div class="board article-layout" data-example>
+      <aside class="block" aria-label="本页目录"><b>本页目录</b><ol><li><a href="#route-overview">路线总览</a></li><li><a href="#route-notes">出行须知</a></li></ol></aside>
+      <article class="block is-paper article-copy">
+        <h3 id="route-overview" tabindex="-1">路线总览</h3><p>第一次前往可以选择松林道。想沿溪停歇可改走溪谷线。</p>
+        <h3 id="route-notes" tabindex="-1">出行须知</h3><p>雨后请避开石阶湿滑的路段。长线建议携带饮水。</p>
+      </article>
+    </div></div></div>
+    <details class="source" data-style="article-css"><summary>查看演示 HTML / CSS</summary><pre><code></code></pre></details>
+  </section>
+  <section class="card" id="masonry">
+    <div class="card-head"><span class="index">06</span><h2>行对齐栅格 vs. 瀑布流</h2></div>
+    <p class="ref"><a href="页面布局设计全景分类参考.md">布局参考 §1.8、§1.10</a></p>
+    <p class="explain">同样的六张高矮不同的卡片。行对齐栅格的下一行要等上一行最高项结束，容易留下空隙；瀑布流让各列连续堆叠。这里用 CSS 多栏近似瀑布流，按列阅读，不等于逐项填入最短列。</p>
+    <fieldset><legend>排列方式</legend><label><input type="radio" name="masonry" checked> 行对齐栅格</label><label><input type="radio" name="masonry" id="masonry-flow"> 瀑布流</label></fieldset>
+    <div class="frame"><div class="viewport"><div class="board" data-example>
+      <ol class="gallery-items">
+        <li class="block"><div class="gallery-swatch" style="--swatch:48px" aria-hidden="true"></div><b>01 松林道</b></li>
+        <li class="block"><div class="gallery-swatch" style="--swatch:102px" aria-hidden="true"></div><b>02 溪谷线</b></li>
+        <li class="block"><div class="gallery-swatch" style="--swatch:68px" aria-hidden="true"></div><b>03 观景环</b></li>
+        <li class="block"><div class="gallery-swatch" style="--swatch:95px" aria-hidden="true"></div><b>04 湿地区</b></li>
+        <li class="block"><div class="gallery-swatch" style="--swatch:52px" aria-hidden="true"></div><b>05 林间站</b></li>
+        <li class="block"><div class="gallery-swatch" style="--swatch:77px" aria-hidden="true"></div><b>06 山谷口</b></li>
+      </ol>
+    </div></div></div>
+    <details class="source" data-style="masonry-css"><summary>查看演示 HTML / CSS</summary><pre><code></code></pre></details>
+  </section>
+
+  <section class="card" id="nav-position">
+    <div class="card-head"><span class="index">07</span><h2>顶部导航 vs. 底部标签栏</h2></div>
+    <p class="ref"><a href="页面布局设计全景分类参考.md">布局参考 §3.1、§3.2</a></p>
+    <p class="explain">三个一级入口不变，只切换导航的位置。顶部便于从上到下扫读；底部更靠近手机握持时的拇指。本例只演示入口放在内容哪一侧，不模拟固定定位或页面跳转。</p>
+    <fieldset><legend>导航位置</legend><label><input type="radio" name="nav-position" checked> 顶部导航</label><label><input type="radio" name="nav-position" id="nav-bottom"> 底部标签栏</label></fieldset>
+    <div class="frame"><div class="viewport"><div class="board nav-board" data-example>
+      <div class="placement-nav" role="group" aria-label="导航位置示意"><span class="current" aria-current="page">路线</span><span>收藏</span><span>我的</span></div>
+      <div class="block is-paper"><h3>路线</h3><p>松林道、溪谷线、观景环。</p></div>
+    </div></div></div>
+    <details class="source" data-style="nav-position-css"><summary>查看演示 HTML / CSS</summary><pre><code></code></pre></details>
+  </section>
+
+  <section class="card" id="twelve">
+    <div class="card-head"><span class="index">08</span><h2>12 栏栅格：等分 vs. 主次</h2></div>
+    <p class="ref"><a href="页面布局设计全景分类参考.md">布局参考 §7.1、§7.3</a></p>
+    <p class="explain">编号是对齐用的底层轨道，不是 12 块内容。宽容器里试试「4＋4＋4」与「8＋4」：主块占 8 栏，两个次块叠在剩下 4 栏。窄容器中，每块跨满整行。</p>
+    <fieldset><legend>跨栏规则</legend><label><input type="radio" name="twelve" checked> 等分 · 4＋4＋4</label><label><input type="radio" name="twelve" id="twelve-focus"> 主次 · 8＋4</label></fieldset>
+    <div class="frame"><div class="viewport"><div class="board twelve-grid" data-example>
+      <div class="track-count" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div>
+      <div class="block is-main overview"><b>路线总览</b><small>3 条步道</small></div>
+      <div class="block"><b>出行须知</b><small>雨后注意湿滑</small></div>
+      <div class="block"><b>补给站点</b><small>饮水与休息</small></div>
+    </div></div></div>
+    <details class="source" data-style="twelve-css"><summary>查看演示 HTML / CSS</summary><pre><code></code></pre></details>
+  </section>
+</main>
+<section class="guide" id="techniques" data-guide="layout" aria-labelledby="techniques-title">
+  <h2 id="techniques-title">完整技法目录</h2>
+  <p>按原参考编号排列。展开条目运行标本，收起后会重置；「已有对照」跳到上面的卡片。</p>
+  <div class="guide-tools"><label for="technique-search">查找布局</label><input type="search" id="technique-search" placeholder="章节号、中文或英文术语"><label><input type="checkbox" id="guide-narrow"> 窄容器预览</label><span class="guide-count" role="status">正在加载目录…</span></div>
+  <nav class="guide-chapters" aria-label="布局章节"></nav><div class="guide-list"></div>
+</section>
+<footer class="note"><strong>给 Agent：</strong>按术语找到卡片，切换宽窄预览，再展开源码。借用布局规则，不必沿用线框配色；断点应由项目的真实内容决定。<br><a href="页面布局设计全景分类参考.md">原布局分类参考</a>（以文本打开，请按上方标明的章节编号查找） · <a href="工作台样板.html">查看工作台组合示例</a></footer>
+<script id="split-js">
+const split = document.querySelector('.split-layout');
+const buttons = split.querySelectorAll('button');
+buttons.forEach(button => button.addEventListener('click', () => {
+  buttons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+  split.querySelector('h3').textContent = button.textContent;
+  split.querySelector('p').textContent = button.dataset.description;
+}));
+</script>
+<script>
+for (const source of document.querySelectorAll('.source')) {
+  const card = source.closest('section');
+  const example = card.querySelector('.viewport');
+  const viewport = example.outerHTML.replace(/^ {4}/gm, '');
+  const control = card.querySelector('fieldset');
+  const html = control
+    ? `<section id="${card.id}">\n${control.outerHTML}\n${viewport}\n</section>` : viewport;
+  const css = document.getElementById(source.dataset.style).textContent.trim();
+  const js = source.dataset.script ? '\n\n/* JavaScript */\n' + document.getElementById(source.dataset.script).textContent.trim() : '';
+  source.querySelector('code').textContent = html + '\n\n/* CSS */\n.viewport { container-type: inline-size; }\n' + css + js;
+}
+</script>
+<script src="图鉴目录数据.js"></script>
+<script src="布局技法数据.js"></script>
+<script src="图鉴目录.js"></script>
+</body>
+</html>

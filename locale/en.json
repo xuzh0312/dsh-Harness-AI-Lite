@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Harness workspace",
+    "description": "Open Add Harness workspace in the sidebar and choose four existing directories. The plugin fills in the Chinese workspace template and its path table, then registers harness as a DSH workspace. New sessions gain write access to the directories you confirm."
+  }
+}

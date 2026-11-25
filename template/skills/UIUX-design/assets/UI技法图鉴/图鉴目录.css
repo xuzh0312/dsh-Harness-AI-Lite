@@ -1,0 +1,30 @@
+.guide { --guide-line:#c9d2c6; --guide-ink:#315941; max-width:1050px; width:100%; margin:0 auto; padding:28px clamp(14px,4vw,42px) 40px; }
+.guide > h2 { font-size:clamp(25px,4vw,37px); line-height:1.25; margin:0; }
+.guide > p { margin:.5rem 0 1rem; }
+.guide-tools { display:flex; align-items:center; flex-wrap:wrap; gap:8px 16px; }
+.guide-tools label { font-weight:650; }
+.guide-tools input[type="search"] { font:inherit; padding:6px 10px; width:min(100%,330px); border:1px solid var(--guide-line); background:#fffefa; color:inherit; border-radius:4px; }
+.guide-chapters { display:flex; flex-wrap:wrap; gap:5px 13px; padding:0; margin:10px 0 20px; font-size:.82rem; }
+.guide-group { scroll-margin-top:12px; margin-bottom:18px; }
+.guide-group h3 { margin:0; padding:8px 0; font-size:1rem; border-block:1px solid var(--guide-line); }
+.guide-row { border-bottom:1px solid var(--guide-line); }
+.guide-row > summary, .guide-link { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 12px; padding:8px 4px; width:100%; text-align:start; }
+.guide-row > summary { cursor:pointer; list-style:none; color:inherit; }
+.guide-row > summary::-webkit-details-marker { display:none; }
+.guide-row > summary::before { content:'▸'; color:var(--guide-ink); }
+.guide-row[open] > summary::before { content:'▾'; }
+.guide-row { scroll-margin-top:12px; }
+.guide-row:target, .guide-group:target { outline:2px solid var(--guide-ink); outline-offset:2px; }
+.guide-id { font:700 .8rem ui-monospace,Consolas,monospace; color:var(--guide-ink); min-width:2.3rem; }
+.guide-badge { font-size:.72rem; background:#e5eee1; color:var(--guide-ink); border:1px solid var(--guide-line); padding:1px 6px; }
+.guide-legacy { font-size:.75rem; }
+.guide-body { margin:0 0 12px; padding:10px; border:1px solid var(--guide-line); background:#eeefe7; min-width:0; }
+.guide-body p { margin:0 0 7px; font-size:.9rem; }
+.guide-stage { max-width:100%; width:100%; margin:0 auto; }
+body:has(#narrow:checked, #guide-narrow:checked) .guide-stage { width:min(100%,340px); }
+.guide-stage iframe { display:block; width:100%; background:#faf9f4; border:1px solid var(--guide-line); }
+.guide-source { margin-top:8px; }
+.guide-source h4 { margin:8px 0 3px; font-size:.78rem; }
+.guide-source pre { overflow:auto; margin:0 0 7px; padding:8px; border:1px solid var(--guide-line); background:#fffefa; font:.78rem/1.45 ui-monospace,Consolas,monospace; max-height:24rem; }
+.guide-empty { color:#82452c; }
+.guide [hidden] { display:none; }

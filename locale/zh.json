@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Harness 工作区",
+    "description": "从侧栏的「添加 Harness 工作区」选择 harness、project、project/code 和 test 四个已有目录。插件补齐中文工作区模板，更新热路径表，并将 harness 登记为 DSH 工作区。新会话按用户确认的目录获得额外写权限。"
+  }
+}
